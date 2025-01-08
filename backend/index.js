@@ -27,7 +27,13 @@ const authMiddleware = (req, res, next) => {
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = decoded;
+    req.user = decoded;  // Store the decoded user information (e.g., userId, role)
+    
+    // Role-based access control (for admin routes)
+    if (req.originalUrl.startsWith('/api/admin') && req.user.role !== 'admin') {
+      return res.status(403).json({ message: 'Admin access required' });
+    }
+    
     next();
   } catch (error) {
     res.status(401).json({ message: 'Invalid token' });
