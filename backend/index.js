@@ -6,13 +6,18 @@ const authRoutes = require('./routes/auth');
 const adminRoutes = require('./routes/admin');
 const jwt = require('jsonwebtoken');
 
-dotenv.config();
+// Load environment variables
+require('dotenv').config();
 
 const app = express();
 
 app.use(cors());
 app.use(express.json());
 
+// Log MongoDB URI for debugging
+console.log('MongoDB URI:', process.env.MONGODB_URI);
+
+// Connect to MongoDB
 mongoose.connect(process.env.MONGODB_URI)
   .then(() => console.log('Connected to MongoDB'))
   .catch(err => console.error('MongoDB connection error:', err));
