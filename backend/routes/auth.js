@@ -9,9 +9,14 @@ router.post('/register', async (req, res) => {
   try {
     const { username, email, password } = req.body;
 
-    // Validate password length
-    if (password.length < 6) {
+    // Validate if password is provided and has a minimum length
+    if (!password || password.length < 6) {
       return res.status(400).json({ message: 'Password must be at least 6 characters long' });
+    }
+
+    // Validate if username or email is provided
+    if (!username || !email) {
+      return res.status(400).json({ message: 'Username and Email are required' });
     }
 
     // Check if user exists
@@ -38,7 +43,7 @@ router.post('/register', async (req, res) => {
     // Send response with token and user details
     res.status(201).json({ token, user: { id: user._id, username: user.username, email: user.email } });
   } catch (error) {
-    console.error(error);
+    console.error('Register Error:', error);
     res.status(500).json({ message: 'Server error' });
   }
 });
@@ -47,6 +52,13 @@ router.post('/register', async (req, res) => {
 router.post('/login', async (req, res) => {
   try {
     const { email, password } = req.body;
+
+    // Check if email and password are provided
+    if (!email || !password) {
+      return res.status(400).json({ message: 'Email and password are required' });
+    }
+
+    console.log('Login Request:', req.body); // Log the request body for debugging
 
     const user = await User.findOne({ email });
     if (!user) {
@@ -65,7 +77,7 @@ router.post('/login', async (req, res) => {
     // Send response with token and user details
     res.json({ token, user: { id: user._id, username: user.username, email: user.email } });
   } catch (error) {
-    console.error(error);
+    console.error('Login Error:', error);
     res.status(500).json({ message: 'Server error' });
   }
 });
