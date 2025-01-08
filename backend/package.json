@@ -1,21 +1,20 @@
 {
   "name": "server",
   "version": "1.0.0",
-  "description": "",
+  "description": "A simple Node.js server with Express and MongoDB",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",  
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": ["node", "express", "mongodb", "api", "server"],
+  "author": "Ghasa",
   "license": "ISC",
   "dependencies": {
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "jsonwebtoken": "^9.0.2",
-    "mongoose": "^8.9.3",
-    "serve": "^14.0.1",  // To serve React build in production
-    "concurrently": "^7.0.0"  // To run both server and client together
+    "mongoose": "^8.9.3"
   }
 }
