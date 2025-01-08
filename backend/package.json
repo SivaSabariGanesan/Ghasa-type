@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node index.js",  
   },
   "keywords": [],
   "author": "",
@@ -14,6 +14,8 @@
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "jsonwebtoken": "^9.0.2",
-    "mongoose": "^8.9.3"
+    "mongoose": "^8.9.3",
+    "serve": "^14.0.1",  // To serve React build in production
+    "concurrently": "^7.0.0"  // To run both server and client together
   }
 }
