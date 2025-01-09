@@ -5,15 +5,12 @@ const userSchema = new mongoose.Schema({
   username: {
     type: String,
     required: true,
-    unique: true,
-    trim: true
+    unique: true
   },
   email: {
     type: String,
     required: true,
-    unique: true,
-    trim: true,
-    lowercase: true
+    unique: true
   },
   password: {
     type: String,
@@ -24,6 +21,10 @@ const userSchema = new mongoose.Schema({
     enum: ['user', 'admin'],
     default: 'user'
   },
+  highScore: {
+    type: Number,
+    default: 0
+  },
   bestWpm: {
     type: Number,
     default: 0
@@ -31,31 +32,37 @@ const userSchema = new mongoose.Schema({
   gamesPlayed: {
     type: Number,
     default: 0
-  },
-  averageWpm: {
-    type: Number,
-    default: 0
-  },
-  totalCharactersTyped: {
-    type: Number,
-    default: 0
-  },
-  accuracy: {
-    type: Number,
-    default: 0
   }
 }, {
   timestamps: true
 });
 
+// Pre-save middleware to hash password
 userSchema.pre('save', async function(next) {
-  if (!this.isModified('password')) return next();
-  this.password = await bcrypt.hash(this.password, 10);
-  next();
+  try {
+    if (!this.isModified('password')) return next();
+    
+    const salt = await bcrypt.genSalt(10);
+    console.log('Hashing password for user:', this.email);
+    this.password = await bcrypt.hash(this.password, salt);
+    next();
+  } catch (error) {
+    console.error('Error hashing password:', error);
+    next(error);
+  }
 });
 
+// Method to compare passwords
 userSchema.methods.comparePassword = async function(candidatePassword) {
-  return bcrypt.compare(candidatePassword, this.password);
+  try {
+    console.log('Comparing passwords for user:', this.email);
+    const isMatch = await bcrypt.compare(candidatePassword, this.password);
+    console.log('Password match result:', isMatch);
+    return isMatch;
+  } catch (error) {
+    console.error('Error comparing passwords:', error);
+    throw error;
+  }
 };
 
 module.exports = mongoose.model('User', userSchema);
